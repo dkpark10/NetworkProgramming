@@ -27,10 +27,10 @@ int main(int argc, char *argv[])
     net_port=htons(host_port); // 변수 host_port에 저장된 데이터를 네트워크 바이트 순서로 변환
     net_addr=htonl(host_addr); // 변수 host_addr에 저장된 데이터를 네트워크 바이트 순서로 변환
 
-    printf("Host ordered port: %#x \n", host_port);
-    printf("Network ordered port: %#x \n", net_port);
-    printf("Host ordered address: %#1x \n", host_addr);
-    printf("Network ordered address: %#1x \n", net_addr);
+    printf("Host ordered port: %#x \n", host_port);        // Ox1234
+    printf("Network ordered port: %#x \n", net_port);      // Ox3412
+    printf("Host ordered address: %#1x \n", host_addr);    // Ox12345678
+    printf("Network ordered address: %#1x \n", net_addr);  // Ox78563412
 
     return 0;
 }
