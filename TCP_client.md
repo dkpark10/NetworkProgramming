@@ -36,10 +36,10 @@ int main(int argc, char *argv[])
         ErrorMessage("connect()");
     }
     int idx = 0;
-    while(read_len = read(sock, &msg[idx++], 1)){                               // TCP의 특성 read함수를 여러변 호출하고 있다.
-        if(read_len == - 1) ErrorMessage("read()");                             // TCP는 read write함수의 호출횟수에 상관이 없다.
-        str_len += read_len;                                                    // 잘 읽어들이면 read함수는 항상 1을 반환하기 때문에 
-    }                                                                           // 1을 매번 호출시 증감시켜 몇번 호출되는지 확인한다. 
+    while(read_len = read(sock, &msg[idx++], 1)){             // TCP의 특성 read함수를 여러변 호출하고 있다.
+        if(read_len == - 1) ErrorMessage("read()");           // TCP는 read write함수의 호출횟수에 상관이 없다.
+        str_len += read_len;                                  // 잘 읽어들이면 read함수는 항상 1을 반환하기 때문에 
+    }                                                         // 1을 매번 호출시 증감시켜 몇번 호출되는지 확인한다. 
     printf("msg from server : %s\n", msg);
     printf("function read call count: %d\n", str_len);
     close(sock);
