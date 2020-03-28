@@ -123,10 +123,8 @@ CPU가 데이터를 메모리에 저장하는 방식은 두가지로 나뉜다. 
 
 int main(int argc, char *argv[])
 {
-    unsigned short host_port = 0x1234; 
-    unsigned short net_port;
-    unsigned int host_addr = 0x12345678;
-    unsigned int net_addr;
+    unsigned short net_port, host_port = 0x1234; 
+    unsigned int net_addr, host_addr = 0x12345678;
 
     net_port=htons(host_port); // 변수 host_port에 저장된 데이터를 네트워크 바이트 순서로 변환
     net_addr=htonl(host_addr); // 변수 host_addr에 저장된 데이터를 네트워크 바이트 순서로 변환
@@ -139,4 +137,3 @@ int main(int argc, char *argv[])
     return 0;
 }
 ```
-
