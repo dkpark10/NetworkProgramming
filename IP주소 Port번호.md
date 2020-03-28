@@ -85,28 +85,33 @@ struct in_addr{
 
 ### 네트워크 바이트 순서와 인터넷 주소 변환
 CPU에 따라 저장방식이 달라질수 있다. 정수 1을 다음과 같이 표현된다. </br>
-</br>
-00000000 00000000 00000000 00000001 </br>
-00000001 00000000 00000000 00000000 </br>
-</br>
+
+**00000000 00000000 00000000 00000001** </br>
+**00000001 00000000 00000000 00000000** </br>
+
 CPU가 데이터를 메모리에 저장하는 방식은 두가지로 나뉜다. </br>
 빅엔디안 = 상위 바이트값을 작은번지수에 저장하는 방식 </br>
 리틀엔디안 = 상위 바이트값을 큰 번지수에 저장하는 방식 </br>
 4바이트 정수 Ox12345678을 빅엔디안방식으로 저장한다고 가정하면 </br>
+
 > Ox12 Ox34 Ox56 Ox78 </br>
+
 4바이트 정수 Ox12345678을 리틀엔디안방식으로 저장한다고 가정하면 </br>
+
 > Ox78 Ox56 Ox34 Ox12 </br>
+
 즉 빅엔디안 오름차순 리틀엔디안 내림차순으로 생각하면 편하다. </br>
 우리가 흔히 사용하는 인텔,AMD는 리틀엔디안 방식으로 저장된다. </br>
 두 컴퓨터가 데이터 통신할 때 방식을 맞춰야 한다.!!!! 아니면 당연히 값이 인식 되니까... </br>
+
 > 빅엔디안으로 통일
 
 ### 바이트 순서의 변환
 
-unsigned short htons(unsigned short) -> short형 데이터를 호스트에서 네트워크 순서로 변환 </br>
-unsigned short ntohs(unsigned short) -> short형 데이터를 네트워크에서 호스트 순서로 변환 </br>
-unsigned short htonl(unsigned long) -> long형 데이터를 호스트에서 네트워크 순서로 변환 </br>
-unsigned short htons(unsigned long) -> long형 데이터를 네트워크에서 호스트 순서로 변환 </br>
+**unsigned short htons(unsigned short)** -> short형 데이터를 호스트에서 네트워크 순서로 변환 </br>
+**unsigned short ntohs(unsigned short)** -> short형 데이터를 네트워크에서 호스트 순서로 변환 </br>
+**unsigned short htonl(unsigned long)** -> long형 데이터를 호스트에서 네트워크 순서로 변환 </br>
+**unsigned short htons(unsigned long)** -> long형 데이터를 네트워크에서 호스트 순서로 변환 </br>
 
 ```c++
 #include <stdio.h>
