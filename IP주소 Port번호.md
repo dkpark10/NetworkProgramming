@@ -64,3 +64,74 @@ struct in_addr{
 생소한 자료형이 보이는데 다음 그림을 참조하자 !!!!!!!!!!!!!! </br>
 
 ![image](https://user-images.githubusercontent.com/43857226/77503530-28b59400-6ea1-11ea-9c8b-8d9b90360a78.png)
+
+### 구조체 sockaddr_in 멤버변수 분석
+
+1.**sin_family** </br>
+프로토콜 체계마다 주소체계가 다름 IPv4는 4바이트 주소 IPv6는 16바이트 주소체계 </br>
+
+|주소체계|의 미|
+|---|---|
+|AF_INET| IPv4 인터넷 주소체계|
+|AF_INET6| IPv6 인터넷 주소체계|
+|AF_LOCAL| 로컬통신을 위한 유닉스 주소체계|
+
+2. **sin_port**
+16비트 포트번호를 저장한다. 네트워크 바이트 순서로 저장 </br>
+
+3. **sin_addr**
+32비트 아이피 주소정보 저장 네트워크 바이트 순서로 저장 </br>
+이 sin_addr 구조체의 멤버변수 in_addr은 32비트 정수자료형으로 저장되있음. </br>
+
+### 네트워크 바이트 순서와 인터넷 주소 변환
+CPU에 따라 저장방식이 달라질수 있다. 정수 1을 다음과 같이 표현된다. </br>
+</br>
+00000000 00000000 00000000 00000001 </br>
+00000001 00000000 00000000 00000000 </br>
+</br>
+CPU가 데이터를 메모리에 저장하는 방식은 두가지로 나뉜다. </br>
+빅엔디안 = 상위 바이트값을 작은번지수에 저장하는 방식 </br>
+리틀엔디안 = 상위 바이트값을 큰 번지수에 저장하는 방식 </br>
+4바이트 정수 Ox12345678을 빅엔디안방식으로 저장한다고 가정하면 </br>
+> Ox12 Ox34 Ox56 Ox78 </br>
+4바이트 정수 Ox12345678을 리틀엔디안방식으로 저장한다고 가정하면 </br>
+> Ox78 Ox56 Ox34 Ox12 </br>
+즉 빅엔디안 오름차순 리틀엔디안 내림차순으로 생각하면 편하다. </br>
+우리가 흔히 사용하는 인텔,AMD는 리틀엔디안 방식으로 저장된다. </br>
+두 컴퓨터가 데이터 통신할 때 방식을 맞춰야 한다.!!!! 아니면 당연히 값이 인식 되니까... </br>
+> 빅엔디안으로 통일
+
+### 바이트 순서의 변환
+
+unsigned short htons(unsigned short) -> short형 데이터를 호스트에서 네트워크 순서로 변환 </br>
+unsigned short ntohs(unsigned short) -> short형 데이터를 네트워크에서 호스트 순서로 변환 </br>
+unsigned short htonl(unsigned long) -> long형 데이터를 호스트에서 네트워크 순서로 변환 </br>
+unsigned short htons(unsigned long) -> long형 데이터를 네트워크에서 호스트 순서로 변환 </br>
+
+```c++
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+
+int main(int argc, char *argv[])
+{
+    unsigned short host_port = 0x1234; 
+    unsigned short net_port;
+    unsigned int host_addr = 0x12345678;
+    unsigned int net_addr;
+
+    net_port=htons(host_port); // 변수 host_port에 저장된 데이터를 네트워크 바이트 순서로 변환
+    net_addr=htonl(host_addr); // 변수 host_addr에 저장된 데이터를 네트워크 바이트 순서로 변환
+
+    printf("Host ordered port: %#x \n", host_port);        // Ox1234
+    printf("Network ordered port: %#x \n", net_port);      // Ox3412
+    printf("Host ordered address: %#1x \n", host_addr);    // Ox12345678
+    printf("Network ordered address: %#1x \n", net_addr);  // Ox78563412
+
+    return 0;
+}
+```
+
