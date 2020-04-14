@@ -70,9 +70,105 @@ addrlen = 매개변수 from으로 전달된 주소에 해당하는 구조체 변
 ### UDP server
 
 ```c++
+#include <cstdio>
+#include <cstdlib>
+#include <fcntl.h>
+#include <unistd.h>
+#include <cstring>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#define BUFSIZE 1024
+using namespace std;
+void Errormessage(const char* str)
+{
+    printf("%s error!!!!!!!\n", str);
+}
+int main(int argc, char *argv[])
+{
+    int servsock, stringlen;
+    char msg[BUFSIZE];
+    struct sockaddr_in serv_adr, clnt_adr;
+    socklen_t clnt_addrsize;
+
+    if(argc != 2){
+        printf("Usage : %s <port>\n", argv[0]);
+        exit(1);
+    }
+    servsock = socket(PF_INET, SOCK_DGRAM, 0);
+    if(servsock == -1) Errormessage("socket()");
+
+    memset(&serv_adr, 0, sizeof(serv_adr));
+    serv_adr.sin_family = AF_INET;
+    serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
+    serv_adr.sin_port = htons(atoi(argv[1]));
+
+    if(bind(servsock, (struct sockaddr*)&serv_adr, sizeof(serv_adr)) == -1)
+        Errormessage("bine()");
+
+    while(1){
+        clnt_addrsize = sizeof(clnt_adr);
+        stringlen = recvfrom(servsock, msg,BUFSIZE, 0, 
+        (struct sockaddr*)&clnt_adr, &clnt_addrsize);
+        
+        sendto(servsock,msg,stringlen,0,
+        (struct sockaddr*)&clnt_adr, clnt_addrsize);
+    }
+    close(servsock);
+    return 0;
+}
 ```
 
 ### UDP client
 
 ```c++
+#include <cstdio>
+#include <cstdlib>
+#include <fcntl.h>
+#include <unistd.h>
+#include <cstring>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#define BUFSIZE 1024
+using namespace std;
+void Errormessage(const char* str)
+{
+    printf("%s error!!!!!!!\n", str);
+}
+int main(int argc, char *argv[])
+{
+    int sock, stringlen;
+    char msg[BUFSIZE];
+    struct sockaddr_in serv_adr, from_adr;
+    socklen_t addrsize;;
+
+    if(argc != 3){
+        printf("Usage : %s <port>\n", argv[0]);
+        exit(1);
+    }
+    sock = socket(PF_INET, SOCK_DGRAM, 0);
+    if(sock == -1) Errormessage("socket()");
+
+    memset(&serv_adr, 0, sizeof(serv_adr));
+    serv_adr.sin_family = AF_INET;
+    serv_adr.sin_addr.s_addr = inet_addr(argv[1]);
+    serv_adr.sin_port = htons(atoi(argv[2]));
+
+    while(1){
+
+        fputs("input message ('q' OR 'Q' quit): ",stdout);
+        fgets(msg, sizeof(msg),stdin);
+        if(!strcmp(msg,"q\n") || !strcmp(msg,"Q\n")) break;
+
+        sendto(sock,msg,strlen(msg),0,
+        (struct sockaddr*)&serv_adr, sizeof(serv_adr));
+        addrsize = sizeof(from_adr);
+
+        stringlen = recvfrom(sock, msg,BUFSIZE, 0, 
+        (struct sockaddr*)&from_adr, &addrsize);
+        msg[stringlen] = 0;
+        printf("msg from server : %s\n", msg);
+    }
+    close(sock);
+    return 0;
+}
 ```
