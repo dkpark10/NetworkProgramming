@@ -10,7 +10,7 @@ TCP 소켓 생성 소멸과정은 다음과 같다.
 
 TCP 소켓은 연결설정 과정에서 총 세 번 대화를 주고 받는다. 
 
-![](C:\Users\userpc\Desktop\3hand.PNG)
+![3hand](https://user-images.githubusercontent.com/43857226/79391920-65ab0d00-7fad-11ea-9864-fdccac9b3758.PNG)
 
 소켓은 전 이중방식으로 동작하므로 양방향으로 데이터를 주고받을 수 있다.
 따라서 데이터 송수신에 앞서 준비과정이 필요하다. 
@@ -25,18 +25,18 @@ TCP 소켓은 연결설정 과정에서 총 세 번 대화를 주고 받는다.
 
 ### 상대 소켓과의 데이터 송수신
 
-![](C:\Users\userpc\Desktop\cc.png)
+![cc](https://user-images.githubusercontent.com/43857226/79391955-7491bf80-7fad-11ea-8d0b-13d88ea49e51.png)
 
 위 그림은 호스트 A가 B에게 총 200바이트를 두번에 나눠 전송하는 과정이다. 먼저 100바이트를 하나 실어 전송하고 패킷의 SEQ를 1200으로 부여한다. 때문에 호스트 B는 이를 근거로 패킷이 제대로 수신되었음을 알려야 한다. 그래서 ACK1301 메세지를 담은 패킷을 A에게 전송한다.  1201이 아닌 1301은 데이터 바이트 크기만큼 추가로 증가시켜서이다. 이로서 100바이트를 온전히 수신하였는지 아닌지 알 수 있다. 다음 공식을 기준으로 ACK메세지를 전송한다.
 
 > ACK num  ->  SEQ num + 전송된 바이트크기 + 1
 
-![](C:\Users\userpc\Desktop\dd.png)
+![dd](https://user-images.githubusercontent.com/43857226/79391964-7a87a080-7fad-11ea-9566-9ec164e1166d.png)
 
 다음은 데이터 송신오류 과정이다. SEQ 1301인 패킷에 100바이트를 B로 전송되는데 오류로 인해 실패했다. 이 경우 A는 일정시간이 지나도 SEQ1301에 대한 ACK를 받지 못하기 때문에 재전송을 한다. 데이터 손실에 대한 재전송을 위해 TCP 소켓은 ACK응답을 요구하는 패킷 전송 시에 타이머를 동작시킨다. 그리고 해당타이머의 타임아웃시 패킷을 재전송한다. 
 
 ### 상대 소켓과 연결종료
 
-![](C:\Users\userpc\Desktop\end.png)
+![end](https://user-images.githubusercontent.com/43857226/79391969-7c516400-7fad-11ea-9d67-bfd3803a7521.png)
 
 종료과정은 네번 거친다. 
